@@ -18,6 +18,31 @@ router.get("/domain", async (req, res) => {
   }
 });
 
+router.post("/domain", async (req, res) => {
+  let domain = req.body.domain;
+
+  if (!domain) {
+    return res.status(400).send("Domain is required");
+  }
+  try {
+    let conn = await db();
+
+    const [results, fields] = await conn.query(
+      "insert into mm_domains(name) value(?)",
+      [domain]
+    );
+    res.json({
+      message: "Domain created successfully",
+      data: results,
+      fields: fields,
+    });
+  } catch (error: any) {
+    return res.status(500).send(error.message);
+  }
+});
+
+
+
 
 
 
